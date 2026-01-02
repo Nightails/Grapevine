@@ -56,7 +56,13 @@ go build -o budgetcli app/cli/main.go
 ---
 ## Scripts
 
-Currently, there are no dedicated script files (like `Makefile` or `scripts/`). Use the standard Go CLI commands.
+The following scripts are available in the `scripts/` directory:
+
+- **Manage Test Data**: Use `scripts/manage_test_data.sh` to populate or clear the database with test data.
+  - Populate: `./scripts/manage_test_data.sh up`
+  - Clear: `./scripts/manage_test_data.sh down`
+
+Standard Go CLI commands:
 
 - **Build**: `go build -o budgetcli app/cli/main.go`
 - **Run**: `go run app/cli/main.go`
@@ -76,11 +82,16 @@ The application uses the following environment variables (typically stored in a 
 ---
 ## Tests
 
-TODO: No tests are currently implemented. 
+Automated Go tests are currently being implemented. In the meantime, you can use the test data script to verify database operations.
 
-To run tests (when added):
+To run Go tests (when added):
 ```bash
 go test ./...
+```
+
+To populate test data:
+```bash
+./scripts/manage_test_data.sh up
 ```
 
 ---
@@ -93,8 +104,11 @@ go test ./...
 │       └── main.go       # Application entry point
 ├── database/
 │   ├── app.db            # SQLite database (git-ignored)
-│   └── migrations/       # SQL migration files
+│   ├── migrations/       # SQL migration files
+│   └── tests/            # Test data SQL files
 ├── internal/             # Internal packages (currently empty)
+├── scripts/              # Helper scripts
+│   └── manage_test_data.sh
 ├── .env                  # Environment variables (git-ignored)
 ├── go.mod                # Go module definition
 └── go.sum                # Go module checksums
