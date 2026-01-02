@@ -1,21 +1,47 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+	_ "github.com/mattn/go-sqlite3"
 )
 
-//TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
-
 func main() {
-	//TIP <p>Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined text
-	// to see how GoLand suggests fixing the warning.</p><p>Alternatively, if available, click the lightbulb to view possible fixes.</p>
-	s := "gopher"
-	fmt.Printf("Hello and welcome, %s!\n", s)
+	fmt.Println("Welcome to Budget CLI")
 
-	for i := 1; i <= 5; i++ {
-		//TIP <p>To start your debugging session, right-click your code in the editor and select the Debug option.</p> <p>We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-		// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.</p>
-		fmt.Println("i =", 100/i)
+	// load .env file
+	fmt.Println("Loading .env file...")
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file")
 	}
+
+	dbDriver := os.Getenv("GOOSE_DRIVER")
+	dbSource := os.Getenv("GOOSE_DBSTRING")
+	if dbSource == "" {
+		log.Fatal("GOOSE_DBSTRING environment variable is not set in .env")
+	}
+
+	// open database connection
+	fmt.Printf("Opening database connection: %s\n", dbSource)
+	db, err := sql.Open(dbDriver, dbSource)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(db)
+
+	// Verify the connection is valid
+	if err := db.Ping(); err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	fmt.Println("Successfully connected to the database!")
 }
