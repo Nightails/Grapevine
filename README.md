@@ -3,19 +3,19 @@
 A command-line interface (CLI) application for budget management.
 
 ---
-## Overview
+## 📝 Overview
 
 BudgetCLI is a tool designed to help users manage their budgets directly from the terminal. It uses SQLite for data storage and Goose for database migrations.
 
 ---
-## Requirements
+## 🛠️ Requirements
 
 - **Go**: v1.25 or higher
 - **SQLite**: Ensure you have SQLite installed if you want to inspect the database manually.
 - **Goose**: Used for database migrations.
 
 ---
-## Setup
+## ⚙️ Setup
 
 1. **Clone the repository**:
    ```bash
@@ -38,7 +38,7 @@ BudgetCLI is a tool designed to help users manage their budgets directly from th
    ```
 
 ---
-## Run Commands
+## 🖥️ Run Commands
 
 To run the application:
 
@@ -54,7 +54,7 @@ go build -o budgetcli app/cli/main.go
 ```
 
 ---
-## Scripts
+## 📔 Scripts
 
 The following scripts are available in the `scripts/` directory:
 
@@ -69,7 +69,7 @@ Standard Go CLI commands:
 - **Migrate Up**: `goose -dir database/migrations sqlite3 database/app.db up`
 
 ---
-## Environment Variables
+## 🏡 Environment Variables
 
 The application uses the following environment variables (typically stored in a `.env` file):
 
@@ -80,7 +80,7 @@ The application uses the following environment variables (typically stored in a 
 | `GOOSE_MIGRATION_DIR` | Path to the migrations directory | `database/migrations` |
 
 ---
-## Tests
+## 🪧 Tests
 
 Automated Go tests are currently being implemented. In the meantime, you can use the test data script to verify database operations.
 
@@ -95,7 +95,7 @@ To populate test data:
 ```
 
 ---
-## Project Structure
+## 📁 Project Structure
 
 ```text
 .
@@ -115,6 +115,6 @@ To populate test data:
 ```
 
 ---
-## License
+## 🏛️ License
 
 TODO: Add license information.
