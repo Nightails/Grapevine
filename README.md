@@ -5,7 +5,7 @@ A command-line interface (CLI) application for budget management.
 ---
 ## 📝 Overview
 
-BudgetCLI is a tool designed to help users manage their budgets directly from the terminal. It uses SQLite for data storage and Goose for database migrations.
+BudgetCLI is a tool designed to help users manage their budgets directly from the terminal. It uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
 
 ---
 ## 🛠️ Requirements
@@ -13,6 +13,7 @@ BudgetCLI is a tool designed to help users manage their budgets directly from th
 - **Go**: v1.25 or higher
 - **SQLite**: Ensure you have SQLite installed if you want to inspect the database manually.
 - **Goose**: Used for database migrations.
+- **SQLC**: Used to generate type-safe Go code from SQL.
 
 ---
 ## ⚙️ Setup
@@ -34,7 +35,13 @@ BudgetCLI is a tool designed to help users manage their budgets directly from th
 4. **Run migrations**:
    ```bash
    # Using goose (ensure goose is installed)
-   goose -dir database/migrations sqlite3 database/app.db up
+   goose up
+   ```
+
+5. **Generate SQL code**:
+   ```bash
+   # Using sqlc (ensure sqlc is installed)
+   sqlc generate
    ```
 
 ---
@@ -66,7 +73,8 @@ Standard Go CLI commands:
 
 - **Build**: `go build -o budgetcli app/cli/main.go`
 - **Run**: `go run app/cli/main.go`
-- **Migrate Up**: `goose -dir database/migrations sqlite3 database/app.db up`
+- **Migrate Up**: `goose up`
+- **SQL Generate**: `sqlc generate`
 
 ---
 ## 🏡 Environment Variables
@@ -105,11 +113,14 @@ To populate test data:
 ├── database/
 │   ├── app.db            # SQLite database (git-ignored)
 │   ├── migrations/       # SQL migration files
+│   ├── queries/          # SQL query files for SQLC
 │   └── tests/            # Test data SQL files
-├── internal/             # Internal packages (currently empty)
+├── internal/             # Internal packages
+│   └── database/         # Generated SQLC code
 ├── scripts/              # Helper scripts
 │   └── manage_test_data.sh
 ├── .env                  # Environment variables (git-ignored)
+├── sqlc.yaml             # SQLC configuration
 ├── go.mod                # Go module definition
 └── go.sum                # Go module checksums
 ```
