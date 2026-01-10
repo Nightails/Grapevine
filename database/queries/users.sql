@@ -7,7 +7,11 @@ RETURNING *;
 SELECT * FROM users WHERE id = ?1;
 
 -- name: UpdateUserByID :exec
-UPDATE users SET password = ?2 WHERE id = ?1;
+UPDATE users
+SET
+    updated_at = ?2,
+    password = ?3
+WHERE id = ?1;
 
 -- name: RemoveUserByID :exec
 DELETE FROM users WHERE id = ?1;

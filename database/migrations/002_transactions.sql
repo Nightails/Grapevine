@@ -7,7 +7,8 @@ CREATE TABLE transactions (
     amount INTEGER NOT NULL DEFAULT 0,
     description TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'pending',
-    date TEXT NOT NULL DEFAULT CURRENT_DATE
+    date TEXT NOT NULL DEFAULT CURRENT_DATE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- +goose Down
