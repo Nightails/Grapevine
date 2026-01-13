@@ -30,6 +30,17 @@ Stores financial transactions for users.
 | `status` | TEXT | NOT NULL, DEFAULT 'pending' | Status of the transaction (e.g., pending, completed). |
 | `date` | TEXT | NOT NULL, DEFAULT CURRENT_DATE | The date of the transaction. |
 
+### `merchants`
+
+Stores information about merchants involved in transactions.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | INTEGER | PRIMARY KEY | Unique identifier for the merchant. |
+| `created_at` | TEXT | NOT NULL | Timestamp when the merchant was created. |
+| `updated_at` | TEXT | NOT NULL | Timestamp when the merchant was last updated. |
+| `name` | TEXT | NOT NULL | The name of the merchant. |
+
 ## Relationships
 
 - `transactions.user_id` references `users.id` with `ON DELETE CASCADE`.

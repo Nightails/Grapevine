@@ -77,6 +77,11 @@ Standard Go CLI commands:
 - **SQL Generate**: `sqlc generate`
 
 ---
+## 📄 Documentation
+
+For detailed information about the database schema, please refer to [docs/database.md](docs/database.md).
+
+---
 ## 🏡 Environment Variables
 
 The application uses the following environment variables (typically stored in a `.env` file):
@@ -115,6 +120,8 @@ To populate test data:
 │   ├── migrations/       # SQL migration files
 │   ├── queries/          # SQL query files for SQLC
 │   └── tests/            # Test data SQL files
+├── docs/                 # Documentation
+│   └── database.md       # Database schema documentation
 ├── internal/             # Internal packages
 │   └── database/         # Generated SQLC code
 ├── scripts/              # Helper scripts
