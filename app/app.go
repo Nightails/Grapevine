@@ -89,6 +89,7 @@ func (m LoginScreenModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m LoginScreenModel) View() string {
 	return fmt.Sprintf(
 		`Welcome to Budget CLI!
+
 %s
 %s
 

@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	p := tea.NewProgram(app.InitialLoginScreenModel())
+	p := tea.NewProgram(app.InitialLoginScreenModel(), tea.WithAltScreen())
 
 	if _, err := p.Run(); err != nil {
 		log.Fatal(err)
