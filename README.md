@@ -5,12 +5,12 @@ A command-line interface (CLI) application for budget management.
 ---
 ## 📝 Overview
 
-BudgetCLI is a tool designed to help users manage their budgets directly from the terminal. It uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
+BudgetCLI is a terminal-based tool designed to help users manage their budgets directly from the command line. It features a Text User Interface (TUI) built with Bubble Tea, and uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
 
 ---
 ## 🛠️ Requirements
 
-- **Go**: v1.25 or higher
+- **Go**: v1.21 or higher (using toolchain v1.23.4)
 - **SQLite**: Ensure you have SQLite installed if you want to inspect the database manually.
 - **Goose**: Used for database migrations.
 - **SQLC**: Used to generate type-safe Go code from SQL.
@@ -30,7 +30,7 @@ BudgetCLI is a tool designed to help users manage their budgets directly from th
    ```
 
 3. **Configure environment variables**:
-   Create a `.env` file in the root directory (refer to [Environment Variables](#environment-variables)).
+   Create a `.env` file in the root directory (refer to [Environment Variables](#-environment-variables)).
 
 4. **Run migrations**:
    ```bash
@@ -45,18 +45,29 @@ BudgetCLI is a tool designed to help users manage their budgets directly from th
    ```
 
 ---
+## 🔐 Environment Variables
+
+The project uses environment variables for database configuration.
+
+| Variable              | Description                                      | Default Value         |
+|-----------------------|--------------------------------------------------|-----------------------|
+| `GOOSE_DRIVER`        | Database driver for Goose migrations             | `sqlite3`             |
+| `GOOSE_DBSTRING`      | Path to the SQLite database file                 | `database/app.db`     |
+| `GOOSE_MIGRATION_DIR` | Directory containing Goose migration files       | `database/migrations` |
+
+---
 ## 🖥️ Run Commands
 
 To run the application:
 
 ```bash
-go run app/cli/main.go
+go run main.go
 ```
 
 To build the application:
 
 ```bash
-go build -o budgetcli app/cli/main.go
+go build -o budgetcli main.go
 ./budgetcli
 ```
 
@@ -71,8 +82,8 @@ The following scripts are available in the `scripts/` directory:
 
 Standard Go CLI commands:
 
-- **Build**: `go build -o budgetcli app/cli/main.go`
-- **Run**: `go run app/cli/main.go`
+- **Build**: `go build -o budgetcli main.go`
+- **Run**: `go run main.go`
 - **Migrate Up**: `goose up`
 - **SQL Generate**: `sqlc generate`
 
@@ -80,17 +91,6 @@ Standard Go CLI commands:
 ## 📄 Documentation
 
 For detailed information about the database schema, please refer to [docs/database.md](docs/database.md).
-
----
-## 🏡 Environment Variables
-
-The application uses the following environment variables (typically stored in a `.env` file):
-
-| Variable | Description | Example Value |
-|----------|-------------|---------------|
-| `GOOSE_DRIVER` | Database driver for Goose | `sqlite3` |
-| `GOOSE_DBSTRING` | Path to the SQLite database file | `database/app.db` |
-| `GOOSE_MIGRATION_DIR` | Path to the migrations directory | `database/migrations` |
 
 ---
 ## 🪧 Tests
@@ -112,9 +112,8 @@ To populate test data:
 
 ```text
 .
-├── app/
-│   └── cli/
-│       └── main.go       # Application entry point
+├── app/                  # TUI components and logic
+│   └── app.go            
 ├── database/
 │   ├── app.db            # SQLite database (git-ignored)
 │   ├── migrations/       # SQL migration files
@@ -123,10 +122,12 @@ To populate test data:
 ├── docs/                 # Documentation
 │   └── database.md       # Database schema documentation
 ├── internal/             # Internal packages
+│   ├── auth/             # Authentication logic
 │   └── database/         # Generated SQLC code
 ├── scripts/              # Helper scripts
 │   └── manage_test_data.sh
 ├── .env                  # Environment variables (git-ignored)
+├── main.go               # Application entry point
 ├── sqlc.yaml             # SQLC configuration
 ├── go.mod                # Go module definition
 └── go.sum                # Go module checksums
