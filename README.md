@@ -29,12 +29,15 @@ BudgetCLI is a terminal-based tool designed to help users manage their budgets d
    go mod download
    ```
 
-3. **Configure environment variables**:
-   Create a `.env` file in the root directory (refer to [Environment Variables](#-environment-variables)).
+3. **Configure environment variables (Optional)**:
+   Refer to [docs/environment_variables.md](docs/environment_variables.md) for details on available environment variables.
 
 4. **Run migrations**:
    ```bash
-   # Using goose (ensure goose is installed)
+   # Using goose with explicit flags
+   goose -dir database/migrations sqlite3 database/app.db up
+
+   # OR using environment variables (if configured)
    goose up
    ```
 
@@ -45,29 +48,24 @@ BudgetCLI is a terminal-based tool designed to help users manage their budgets d
    ```
 
 ---
-## 🔐 Environment Variables
-
-The project uses environment variables for database configuration.
-
-| Variable              | Description                                      | Default Value         |
-|-----------------------|--------------------------------------------------|-----------------------|
-| `GOOSE_DRIVER`        | Database driver for Goose migrations             | `sqlite3`             |
-| `GOOSE_DBSTRING`      | Path to the SQLite database file                 | `database/app.db`     |
-| `GOOSE_MIGRATION_DIR` | Directory containing Goose migration files       | `database/migrations` |
-
----
 ## 🖥️ Run Commands
 
-To run the application:
+To run the application (TUI):
 
 ```bash
-go run main.go
+go run app/tui/main.go
+```
+
+To run the application (CLI):
+
+```bash
+go run app/cli/main.go
 ```
 
 To build the application:
 
 ```bash
-go build -o budgetcli main.go
+go build -o budgetcli app/tui/main.go
 ./budgetcli
 ```
 
@@ -82,15 +80,17 @@ The following scripts are available in the `scripts/` directory:
 
 Standard Go CLI commands:
 
-- **Build**: `go build -o budgetcli main.go`
-- **Run**: `go run main.go`
-- **Migrate Up**: `goose up`
+- **Build**: `go build -o budgetcli app/tui/main.go`
+- **Run**: `go run app/tui/main.go`
+- **Migrate Up**: `goose -dir database/migrations sqlite3 database/app.db up` or simply `goose up` (if env vars are set)
 - **SQL Generate**: `sqlc generate`
 
 ---
 ## 📄 Documentation
 
-For detailed information about the database schema, please refer to [docs/database.md](docs/database.md).
+For detailed information about the database schema and environment variables, please refer to:
+- [docs/database.md](docs/database.md)
+- [docs/environment_variables.md](docs/environment_variables.md)
 
 ---
 ## 🪧 Tests
@@ -112,22 +112,25 @@ To populate test data:
 
 ```text
 .
-├── app/                  # TUI components and logic
-│   └── app.go            
+├── app/                  # Application entry points
+│   ├── cli/              # CLI application
+│   │   └── main.go
+│   └── tui/              # TUI application
+│       └── main.go
 ├── database/
 │   ├── app.db            # SQLite database (git-ignored)
 │   ├── migrations/       # SQL migration files
 │   ├── queries/          # SQL query files for SQLC
 │   └── tests/            # Test data SQL files
 ├── docs/                 # Documentation
-│   └── database.md       # Database schema documentation
+│   ├── database.md       # Database schema documentation
+│   └── environment_variables.md # Environment variables documentation
 ├── internal/             # Internal packages
 │   ├── auth/             # Authentication logic
 │   └── database/         # Generated SQLC code
 ├── scripts/              # Helper scripts
 │   └── manage_test_data.sh
 ├── .env                  # Environment variables (git-ignored)
-├── main.go               # Application entry point
 ├── sqlc.yaml             # SQLC configuration
 ├── go.mod                # Go module definition
 └── go.sum                # Go module checksums
