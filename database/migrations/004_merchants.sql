@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE merchants (
-    id INTEGER PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     name TEXT NOT NULL
