@@ -1,12 +1,22 @@
-package app
+package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	_ "github.com/mattn/go-sqlite3"
 )
+
+func main() {
+	p := tea.NewProgram(initialLoginScreenModel(), tea.WithAltScreen())
+
+	if _, err := p.Run(); err != nil {
+		log.Fatal(err)
+	}
+}
 
 const (
 	username = iota
@@ -23,13 +33,13 @@ var (
 	continueStyle = lipgloss.NewStyle().Foreground(darkGray)
 )
 
-type LoginScreenModel struct {
+type loginScreenModel struct {
 	inputs  []textinput.Model
 	focused int
 	err     error
 }
 
-func InitialLoginScreenModel() LoginScreenModel {
+func initialLoginScreenModel() loginScreenModel {
 	var inputs []textinput.Model = make([]textinput.Model, 2)
 
 	inputs[username] = textinput.New()
@@ -43,18 +53,18 @@ func InitialLoginScreenModel() LoginScreenModel {
 	inputs[password].Prompt = ""
 	inputs[password].Width = 30
 
-	return LoginScreenModel{
+	return loginScreenModel{
 		inputs:  inputs,
 		focused: 0,
 		err:     nil,
 	}
 }
 
-func (m LoginScreenModel) Init() tea.Cmd {
+func (m loginScreenModel) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func (m LoginScreenModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m loginScreenModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd = make([]tea.Cmd, len(m.inputs))
 
 	switch msg := msg.(type) {
@@ -86,7 +96,7 @@ func (m LoginScreenModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m LoginScreenModel) View() string {
+func (m loginScreenModel) View() string {
 	return fmt.Sprintf(
 		`Welcome to Budget CLI!
 
@@ -107,6 +117,6 @@ func (m LoginScreenModel) View() string {
 }
 
 // nextInput cycles the focused input field to the next one in the inputs slice.
-func (m *LoginScreenModel) nextInput() {
+func (m *loginScreenModel) nextInput() {
 	m.focused = (m.focused + 1) % len(m.inputs)
 }
