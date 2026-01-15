@@ -5,6 +5,7 @@ CREATE TABLE transactions (
     updated_at TEXT NOT NULL,
     user_id INTEGER NOT NULL,
     amount INTEGER NOT NULL DEFAULT 0,
+    currency TEXT NOT NULL DEFAULT 'USD',
     description TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'pending',
     date TEXT NOT NULL DEFAULT CURRENT_DATE,

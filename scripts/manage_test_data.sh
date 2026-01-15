@@ -14,7 +14,8 @@ function check_db() {
 function empty() {
     check_db
     # Delete records to allow fresh insertion without constraint errors
-    sqlite3 "$DB_PATH" "DELETE FROM transactions; DELETE FROM users;"
+    # Updated: Added accounts and merchants tables
+    sqlite3 "$DB_PATH" "DELETE FROM transactions; DELETE FROM accounts; DELETE FROM merchants; DELETE FROM users;"
     echo "🧹 Database cleared."
 }
 

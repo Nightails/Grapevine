@@ -3,6 +3,7 @@ CREATE TABLE users (
     id INTEGER PRIMARY KEY,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
+    username TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL DEFAULT 'empty'
 );
 
