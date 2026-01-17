@@ -43,3 +43,11 @@ func (cfg *Config) LoginUser(username, password string) (string, error) {
 
 	return user.ID, nil
 }
+
+func (cfg *Config) IsUserExists(username string) bool {
+	_, err := cfg.DbQueries.GetUserByUsername(context.Background(), username)
+	if err != nil {
+		return false
+	}
+	return true
+}

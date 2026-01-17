@@ -1,9 +1,13 @@
 package main
 
 import (
+	"budgetcli/internal/api"
+	"budgetcli/internal/database"
+	"bufio"
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -17,7 +21,6 @@ func main() {
 	fmt.Println("Welcome to Budget CLI")
 
 	// open database connection
-	fmt.Printf("Opening database connection: %s\n", dbSource)
 	db, err := sql.Open(dbDriver, dbSource)
 	if err != nil {
 		log.Fatal(err)
@@ -34,5 +37,25 @@ func main() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	fmt.Println("Successfully connected to the database!")
+	// Create API config
+	config := api.Config{DbQueries: database.New(db)}
+
+	// Prompt for username
+	username := getInput("Username")
+	if !config.IsUserExists(username) {
+		fmt.Println("User does not exist. Please create a new account.")
+		os.Exit(1)
+	}
+	fmt.Println("Welcome, " + username)
+}
+
+func getInput(prompt string) string {
+	fmt.Print("> " + prompt + ": ")
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+		return ""
+	}
+	return input
 }
