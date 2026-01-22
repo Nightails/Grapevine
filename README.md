@@ -5,7 +5,7 @@ A command-line interface (CLI) application for budget management.
 ---
 ## 📝 Overview
 
-BudgetCLI is a terminal-based tool designed to help users manage their budgets directly from the command line. It features a Text User Interface (TUI) built with Bubble Tea, and uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
+BudgetCLI is a terminal-based tool designed to help users manage their budgets directly from the command line. It uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
 
 ---
 ## 🛠️ Requirements
@@ -50,22 +50,16 @@ BudgetCLI is a terminal-based tool designed to help users manage their budgets d
 ---
 ## 🖥️ Run Commands
 
-To run the application (TUI):
+To run the application:
 
 ```bash
-go run app/tui/main.go
-```
-
-To run the application (CLI):
-
-```bash
-go run app/cli/main.go
+go run main.go
 ```
 
 To build the application:
 
 ```bash
-go build -o budgetcli app/tui/main.go
+go build -o budgetcli main.go
 ./budgetcli
 ```
 
@@ -80,8 +74,8 @@ The following scripts are available in the `scripts/` directory:
 
 Standard Go CLI commands:
 
-- **Build**: `go build -o budgetcli app/tui/main.go`
-- **Run**: `go run app/tui/main.go`
+- **Build**: `go build -o budgetcli main.go`
+- **Run**: `go run main.go`
 - **Migrate Up**: `goose -dir database/migrations sqlite3 database/app.db up` or simply `goose up` (if env vars are set)
 - **SQL Generate**: `sqlc generate`
 
@@ -95,9 +89,9 @@ For detailed information about the database schema and environment variables, pl
 ---
 ## 🪧 Tests
 
-Automated Go tests are currently being implemented. In the meantime, you can use the test data script to verify database operations.
+Automated Go tests are included in the project.
 
-To run Go tests (when added):
+To run Go tests:
 ```bash
 go test ./...
 ```
@@ -112,11 +106,6 @@ To populate test data:
 
 ```text
 .
-├── app/                  # Application entry points
-│   ├── cli/              # CLI application
-│   │   └── main.go
-│   └── tui/              # TUI application
-│       └── main.go
 ├── database/
 │   ├── app.db            # SQLite database (git-ignored)
 │   ├── migrations/       # SQL migration files
@@ -126,11 +115,13 @@ To populate test data:
 │   ├── database.md       # Database schema documentation
 │   └── environment_variables.md # Environment variables documentation
 ├── internal/             # Internal packages
+│   ├── api/              # API and business logic
 │   ├── auth/             # Authentication logic
 │   └── database/         # Generated SQLC code
 ├── scripts/              # Helper scripts
 │   └── manage_test_data.sh
 ├── .env                  # Environment variables (git-ignored)
+├── main.go               # Application entry point
 ├── sqlc.yaml             # SQLC configuration
 ├── go.mod                # Go module definition
 └── go.sum                # Go module checksums
