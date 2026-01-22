@@ -19,6 +19,7 @@ const (
 
 func main() {
 	fmt.Println("Welcome to Budget CLI")
+	fmt.Println("=====================")
 
 	// open database connection
 	db, err := sql.Open(dbDriver, dbSource)
@@ -36,6 +37,8 @@ func main() {
 	if err := db.Ping(); err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
+
+	fmt.Println("Connected to database")
 
 	// Create API config
 	config := api.Config{DbQueries: database.New(db)}
