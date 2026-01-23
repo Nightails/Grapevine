@@ -20,7 +20,7 @@ Grapevine is a terminal-based tool designed to help users manage their budgets d
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Nightails/Grapevine.git
    cd grapevine
    ```
 
