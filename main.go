@@ -1,6 +1,7 @@
 package main
 
 import (
+	"budgetcli/internal/cli"
 	"budgetcli/internal/config"
 	"database/sql"
 	"log"
@@ -9,6 +10,7 @@ import (
 )
 
 func main() {
+	// Initialize config and database
 	cfg, err := config.Init()
 	if err != nil {
 		log.Fatalf("Failed to initialize config: %v", err)
@@ -26,4 +28,6 @@ func main() {
 	if err = db.Ping(); err != nil {
 		log.Fatalf("Failed to ping SQL database: %v", err)
 	}
+	// Run CLI
+	cli.Run(cfg, db)
 }
