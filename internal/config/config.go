@@ -18,7 +18,7 @@ type Config struct {
 }
 
 const configFile = "bgcliconfig.yaml"
-const configDir = ".config/budgetcli/"
+const configDir = ".config/grapevine/"
 
 func Init() (*Config, error) {
 	cfgPath, err := getConfigPath()

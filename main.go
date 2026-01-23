@@ -1,9 +1,9 @@
 package main
 
 import (
-	"budgetcli/internal/cli"
-	"budgetcli/internal/config"
 	"database/sql"
+	"grapevine/internal/cli"
+	"grapevine/internal/config"
 	"log"
 
 	_ "github.com/mattn/go-sqlite3"

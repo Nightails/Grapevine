@@ -1,11 +1,11 @@
-# BudgetCLI
+# 🍇 Grapevine
 
 A command-line interface (CLI) application for budget management.
 
 ---
 ## 📝 Overview
 
-BudgetCLI is a terminal-based tool designed to help users manage their budgets directly from the command line. It uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
+Grapevine is a terminal-based tool designed to help users manage their budgets directly from the command line. It uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
 
 ---
 ## 🛠️ Requirements
@@ -21,7 +21,7 @@ BudgetCLI is a terminal-based tool designed to help users manage their budgets d
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd budgetcli
+   cd grapevine
    ```
 
 2. **Install dependencies**:
@@ -59,8 +59,8 @@ go run main.go
 To build the application:
 
 ```bash
-go build -o budgetcli main.go
-./budgetcli
+go build -o grapevine main.go
+./grapevine
 ```
 
 ---
@@ -74,7 +74,7 @@ The following scripts are available in the `scripts/` directory:
 
 Standard Go CLI commands:
 
-- **Build**: `go build -o budgetcli main.go`
+- **Build**: `go build -o grapevine main.go`
 - **Run**: `go run main.go`
 - **Migrate Up**: `goose -dir database/migrations sqlite3 database/app.db up` or simply `goose up` (if env vars are set)
 - **SQL Generate**: `sqlc generate`

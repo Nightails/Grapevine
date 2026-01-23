@@ -1,4 +1,4 @@
-module budgetcli
+module grapevine
 
 go 1.25
 

@@ -1,11 +1,11 @@
 package cli
 
 import (
-	"budgetcli/internal/config"
-	"budgetcli/internal/database"
 	"database/sql"
 	"errors"
 	"fmt"
+	"grapevine/internal/config"
+	"grapevine/internal/database"
 	"os"
 )
 

@@ -1,6 +1,6 @@
 # Database Documentation
 
-This document describes the database schema for the BudgetCLI application. The database uses SQLite.
+This document describes the database schema for the Grapevine application. The database uses SQLite.
 
 ## Tables
 
