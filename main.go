@@ -31,7 +31,7 @@ func main() {
 	}
 
 	// Initialize TUI
-	m := tui.NewModel(cfg, db)
+	m := tui.NewGrapeModel(cfg, db)
 	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
 		log.Fatalf("Failed to run TUI: %v", err)
