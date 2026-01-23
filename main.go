@@ -1,64 +1,29 @@
 package main
 
 import (
-	"budgetcli/internal/api"
-	"budgetcli/internal/database"
-	"bufio"
+	"budgetcli/internal/config"
 	"database/sql"
-	"fmt"
 	"log"
-	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const (
-	dbDriver = "sqlite3"
-	dbSource = "database/app.db"
-)
-
 func main() {
-	fmt.Println("Welcome to Budget CLI")
-	fmt.Println("=====================")
-
-	// open database connection
-	db, err := sql.Open(dbDriver, dbSource)
+	cfg, err := config.Init()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Failed to initialize config: %v", err)
+	}
+	db, err := sql.Open(cfg.DbDriver, cfg.DbURl)
+	if err != nil {
+		log.Fatalf("Failed to open SQL database: %v", err)
 	}
 	defer func(db *sql.DB) {
 		err := db.Close()
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Failed to close SQL database: %v", err)
 		}
 	}(db)
-
-	// Verify the connection is valid
-	if err := db.Ping(); err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+	if err = db.Ping(); err != nil {
+		log.Fatalf("Failed to ping SQL database: %v", err)
 	}
-
-	fmt.Println("Connected to database")
-
-	// Create API config
-	config := api.Config{DbQueries: database.New(db)}
-
-	// Prompt for username
-	username := getInput("Username")
-	if !config.IsUserExists(username) {
-		fmt.Println("User does not exist. Please create a new account.")
-		os.Exit(1)
-	}
-	fmt.Println("Welcome, " + username)
-}
-
-func getInput(prompt string) string {
-	fmt.Print("> " + prompt + ": ")
-	reader := bufio.NewReader(os.Stdin)
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatal(err)
-		return ""
-	}
-	return input
 }
