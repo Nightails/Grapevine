@@ -1,19 +1,20 @@
 # 🍇 Grapevine
 
-A command-line interface (CLI) application for budget management.
+A Terminal User Interface (TUI) application for budget management.
 
 ---
 ## 📝 Overview
 
-Grapevine is a terminal-based tool designed to help users manage their budgets directly from the command line. It uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
+Grapevine is a terminal-based tool designed to help users manage their budgets directly from their favorite terminal. It features a rich TUI built with Bubble Tea, and uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
 
 ---
 ## 🛠️ Requirements
 
 - **Go**: v1.21 or higher (using toolchain v1.23.4)
-- **SQLite**: Ensure you have SQLite installed if you want to inspect the database manually.
+- **SQLite**: Ensure you have SQLite installed for database storage.
 - **Goose**: Used for database migrations.
 - **SQLC**: Used to generate type-safe Go code from SQL.
+- **Bubble Tea**: TUI framework.
 
 ---
 ## ⚙️ Setup
@@ -72,13 +73,6 @@ The following scripts are available in the `scripts/` directory:
   - Populate: `./scripts/manage_test_data.sh up`
   - Clear: `./scripts/manage_test_data.sh down`
 
-Standard Go CLI commands:
-
-- **Build**: `go build -o grapevine main.go`
-- **Run**: `go run main.go`
-- **Migrate Up**: `goose -dir database/migrations sqlite3 database/app.db up` or simply `goose up` (if env vars are set)
-- **SQL Generate**: `sqlc generate`
-
 ---
 ## 📄 Documentation
 
@@ -89,16 +83,11 @@ For detailed information about the database schema and environment variables, pl
 ---
 ## 🪧 Tests
 
-Automated Go tests are included in the project.
+Automated Go tests are included in the project, covering authentication and database operations.
 
 To run Go tests:
 ```bash
 go test ./...
-```
-
-To populate test data:
-```bash
-./scripts/manage_test_data.sh up
 ```
 
 ---
@@ -115,9 +104,11 @@ To populate test data:
 │   ├── database.md       # Database schema documentation
 │   └── environment_variables.md # Environment variables documentation
 ├── internal/             # Internal packages
-│   ├── api/              # API and business logic
 │   ├── auth/             # Authentication logic
-│   └── database/         # Generated SQLC code
+│   ├── cli/              # Command-line interface logic (WIP)
+│   ├── config/           # Configuration management
+│   ├── database/         # Generated SQLC code and database utilities
+│   └── tui/              # Terminal User Interface (bubbletea)
 ├── scripts/              # Helper scripts
 │   └── manage_test_data.sh
 ├── .env                  # Environment variables (git-ignored)
