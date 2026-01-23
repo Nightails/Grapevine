@@ -2,10 +2,11 @@ package main
 
 import (
 	"database/sql"
-	"grapevine/internal/cli"
 	"grapevine/internal/config"
+	"grapevine/internal/tui"
 	"log"
 
+	tea "github.com/charmbracelet/bubbletea"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -28,6 +29,11 @@ func main() {
 	if err = db.Ping(); err != nil {
 		log.Fatalf("Failed to ping SQL database: %v", err)
 	}
-	// Run CLI
-	cli.Run(cfg, db)
+
+	// Initialize TUI
+	m := tui.NewModel(cfg, db)
+	p := tea.NewProgram(m)
+	if _, err := p.Run(); err != nil {
+		log.Fatalf("Failed to run TUI: %v", err)
+	}
 }
