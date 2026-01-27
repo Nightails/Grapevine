@@ -1,5 +1,10 @@
 # 🍇 Grapevine
 
+![Project Status](https://img.shields.io/badge/status-early%20development-orange)
+
+> [!WARNING]
+> This project is in early development and is subject to frequent breaking changes. Use with caution.
+
 A Terminal User Interface (TUI) application for budget management.
 
 ---
