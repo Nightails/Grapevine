@@ -1,6 +1,7 @@
 # 🍇 Grapevine
 
 ![Project Status](https://img.shields.io/badge/status-early%20development-orange)
+![Go Coverage](https://img.shields.io/badge/coverage-4.8%25-red)
 
 > [!WARNING]
 > This project is in early development and is subject to frequent breaking changes. Use with caution.
