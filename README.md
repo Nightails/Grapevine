@@ -112,6 +112,7 @@ go test ./...
 ├── scripts/              # Helper scripts
 │   └── manage_test_data.sh
 ├── .env                  # Environment variables (git-ignored)
+├── LICENSE               # Project license
 ├── main.go               # Application entry point
 ├── sqlc.yaml             # SQLC configuration
 ├── go.mod                # Go module definition
@@ -121,4 +122,4 @@ go test ./...
 ---
 ## 🏛️ License
 
-TODO: Add license information.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
