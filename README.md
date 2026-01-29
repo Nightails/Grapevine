@@ -16,11 +16,11 @@ Grapevine is a terminal-based tool designed to help users manage their budgets d
 ---
 ## 🛠️ Requirements
 
-- **Go**: v1.21 or higher (using toolchain v1.23.4)
-- **SQLite**: Ensure you have SQLite installed for database storage.
-- **Goose**: Used for database migrations.
-- **SQLC**: Used to generate type-safe Go code from SQL.
-- **Bubble Tea**: TUI framework.
+- **[Go](https://go.dev/)**: v1.25 or higher
+- **[SQLite](https://www.sqlite.org/)**: Ensure you have SQLite installed for database storage.
+- **[Goose](https://github.com/pressly/goose)**: Used for database migrations.
+- **[SQLC](https://sqlc.dev/)**: Used to generate type-safe Go code from SQL.
+- **[Bubble Tea](https://github.com/charmbracelet/bubbletea)**: TUI framework.
 
 ---
 ## ⚙️ Setup
