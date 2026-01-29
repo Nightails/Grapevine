@@ -12,10 +12,14 @@ import (
 
 func main() {
 	// Initialize config and database
+	log.Println("Initializing config...")
 	cfg, err := config.Init()
 	if err != nil {
 		log.Fatalf("Failed to initialize config: %v", err)
 	}
+	log.Println("Config initialized")
+
+	log.Println("Initializing database...")
 	db, err := sql.Open(cfg.DbDriver, cfg.DbURl)
 	if err != nil {
 		log.Fatalf("Failed to open SQL database: %v", err)
@@ -29,6 +33,7 @@ func main() {
 	if err = db.Ping(); err != nil {
 		log.Fatalf("Failed to ping SQL database: %v", err)
 	}
+	log.Println("Database initialized")
 
 	// Initialize TUI
 	m := tui.NewGrapeModel(cfg, db)
