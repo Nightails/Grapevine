@@ -36,7 +36,7 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		return
 	}
 
-	str := fmt.Sprintf("%d. %s", index+1, i)
+	str := fmt.Sprintf("%s", i)
 
 	fn := itemStyle.Render
 	if m.Index() == index {
@@ -66,9 +66,11 @@ type LoginModel struct {
 
 func NewLoginModel() LoginModel {
 	items := []list.Item{item("Login"), item("Register")}
-	l := list.New(items, itemDelegate{}, 20, listHeight)
+	l := list.New(items, itemDelegate{}, 40, listHeight)
+	l.Title = titleStyle.Render("🍇  Welcome to Grapevine!")
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
+	l.Styles.Title = titleStyle
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
 	return LoginModel{list: l}
@@ -86,6 +88,13 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Quit the program on Ctrl+C
 		case tea.KeyCtrlC:
 			return m, tea.Quit
+		// Select an item
+		case tea.KeyEnter:
+			i, ok := m.list.SelectedItem().(item)
+			if ok {
+				m.choice = string(i)
+			}
+			return m, nil
 		}
 	case error:
 		return m, nil
