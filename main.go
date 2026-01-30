@@ -36,7 +36,7 @@ func main() {
 	log.Println("Database initialized")
 
 	// Initialize TUI
-	m := tui.NewLoginModel()
+	m := tui.NewLoginModel(cfg, db)
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		log.Fatalf("Failed to run TUI: %v", err)

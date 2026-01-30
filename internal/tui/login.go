@@ -1,7 +1,10 @@
 package tui
 
 import (
+	"database/sql"
 	"fmt"
+	"grapevine/internal/config"
+	"grapevine/internal/database"
 	"io"
 	"strings"
 
@@ -51,8 +54,8 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 }
 
 type LoginModel struct {
-	//cf        *config.Config
-	//dbQueries *database.Queries
+	cfg       *config.Config
+	dbQueries *database.Queries
 
 	// User choice
 	list   list.Model
@@ -64,7 +67,7 @@ type LoginModel struct {
 	//inputs     []textinput.Model
 }
 
-func NewLoginModel() LoginModel {
+func NewLoginModel(cfg *config.Config, db *sql.DB) LoginModel {
 	items := []list.Item{item("Login"), item("Register")}
 	l := list.New(items, itemDelegate{}, 40, listHeight)
 	l.Title = titleStyle.Render("🍇  Welcome to Grapevine!")
@@ -73,7 +76,11 @@ func NewLoginModel() LoginModel {
 	l.Styles.Title = titleStyle
 	l.Styles.PaginationStyle = paginationStyle
 	l.Styles.HelpStyle = helpStyle
-	return LoginModel{list: l}
+	return LoginModel{
+		cfg:       cfg,
+		dbQueries: database.New(db),
+		list:      l,
+	}
 }
 
 func (m LoginModel) Init() tea.Cmd {
