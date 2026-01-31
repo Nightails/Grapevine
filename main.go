@@ -16,6 +16,17 @@ const (
 )
 
 func main() {
+	dbQueries := initDatabase()
+
+	// Initialize TUI
+	m := tui.NewLoginModel(dbQueries)
+	p := tea.NewProgram(m, tea.WithAltScreen())
+	if _, err := p.Run(); err != nil {
+		log.Fatalf("Failed to run TUI: %v", err)
+	}
+}
+
+func initDatabase() *database.Queries {
 	log.Println("Initializing database...")
 	db, err := sql.Open(dbDriver, dbSource)
 	if err != nil {
@@ -32,12 +43,5 @@ func main() {
 	}
 	log.Println("Database initialized")
 
-	dbQueries := database.New(db)
-
-	// Initialize TUI
-	m := tui.NewLoginModel(dbQueries)
-	p := tea.NewProgram(m, tea.WithAltScreen())
-	if _, err := p.Run(); err != nil {
-		log.Fatalf("Failed to run TUI: %v", err)
-	}
+	return database.New(db)
 }
