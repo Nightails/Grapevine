@@ -2,7 +2,7 @@ package main
 
 import (
 	"database/sql"
-	"grapevine/internal/config"
+	"grapevine/internal/database"
 	"grapevine/internal/tui"
 	"log"
 
@@ -10,17 +10,14 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() {
-	// Initialize config and database
-	log.Println("Initializing config...")
-	cfg, err := config.Init()
-	if err != nil {
-		log.Fatalf("Failed to initialize config: %v", err)
-	}
-	log.Println("Config initialized")
+const (
+	dbDriver = "sqlite3"
+	dbSource = "database/app.db"
+)
 
+func main() {
 	log.Println("Initializing database...")
-	db, err := sql.Open(cfg.DbDriver, cfg.DbURl)
+	db, err := sql.Open(dbDriver, dbSource)
 	if err != nil {
 		log.Fatalf("Failed to open SQL database: %v", err)
 	}
@@ -35,8 +32,10 @@ func main() {
 	}
 	log.Println("Database initialized")
 
+	dbQueries := database.New(db)
+
 	// Initialize TUI
-	m := tui.NewLoginModel(cfg, db)
+	m := tui.NewLoginModel(dbQueries)
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		log.Fatalf("Failed to run TUI: %v", err)
