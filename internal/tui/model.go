@@ -3,13 +3,16 @@ package tui
 import (
 	"context"
 	"fmt"
+	"grapevine/internal/auth"
 	"grapevine/internal/database"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/google/uuid"
 )
 
 // Styles
@@ -22,6 +25,7 @@ var (
 type Model struct {
 	dbQueries *database.Queries
 
+	// Overflow by 1 compare to the length of textInputs, to include login and register buttons
 	focusIndex int
 	textInputs []textinput.Model
 }
@@ -68,15 +72,36 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		// Submit form or next focus
 		case "enter":
-			s := msg.String()
-			if s == "enter" && m.focusIndex == len(m.textInputs) {
+			// Submit
+			if m.focusIndex == len(m.textInputs) {
 				u, err := m.dbQueries.GetUserByUsername(context.Background(), m.textInputs[0].Value())
 				if err != nil {
 					log.Printf("error: %v", err)
 				} else {
 					log.Printf("user: %+v", u)
 				}
-				return m, tea.Quit
+				// TODO: authenticate user and login
+			}
+			// Register
+			if m.focusIndex == len(m.textInputs)+1 {
+				hashedPassword, err := auth.HashPassword(m.textInputs[1].Value())
+				if err != nil {
+					return m, nil
+				}
+				params := database.AddUserParams{
+					ID:        uuid.NewString(),
+					CreatedAt: time.Now().String(),
+					UpdatedAt: time.Now().String(),
+					Username:  m.textInputs[0].Value(),
+					Password:  hashedPassword,
+				}
+				u, err := m.dbQueries.AddUser(context.Background(), params)
+				if err != nil {
+					log.Printf("error: %v", err)
+				} else {
+					log.Printf("user: %+v", u)
+				}
+				// TODO: login new user
 			}
 			m.focusIndex++
 			cmds := m.updateFocus()
@@ -91,10 +116,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.focusIndex--
 			}
 
-			if m.focusIndex > len(m.textInputs) {
+			if m.focusIndex > len(m.textInputs)+1 {
 				m.focusIndex = 0
 			} else if m.focusIndex < 0 {
-				m.focusIndex = len(m.textInputs)
+				m.focusIndex = len(m.textInputs) + 1
 			}
 
 			cmds := m.updateFocus()
@@ -122,11 +147,16 @@ func (m Model) View() string {
 		}
 	}
 
-	button := fmt.Sprintf("[ %s ]", blurredStyle.Render("Login"))
+	loginButton := fmt.Sprintf("[ %s ]", blurredStyle.Render("Login"))
 	if m.focusIndex == len(m.textInputs) {
-		button = fmt.Sprintf("[ %s ]", focusedStyle.Render("Login"))
+		loginButton = fmt.Sprintf("[ %s ]", focusedStyle.Render("Login"))
 	}
-	_, _ = fmt.Fprintf(&b, "\n\n%s\n\n", button)
+
+	registerButton := fmt.Sprintf("[ %s ]", blurredStyle.Render("Register"))
+	if m.focusIndex == len(m.textInputs)+1 {
+		registerButton = fmt.Sprintf("[ %s ]", focusedStyle.Render("Register"))
+	}
+	_, _ = fmt.Fprintf(&b, "\n\n%s  %s\n\n", loginButton, registerButton)
 
 	return b.String()
 }
