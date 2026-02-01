@@ -1,7 +1,7 @@
 # 🍇 Grapevine
 
 ![Project Status](https://img.shields.io/badge/status-early%20development-orange)
-![Go Coverage](https://img.shields.io/badge/coverage-4.8%25-red)
+![Go Coverage](https://img.shields.io/badge/coverage-3.7%25-red)
 
 > [!WARNING]
 > This project is in early development and is subject to frequent breaking changes. Use with caution.
@@ -11,16 +11,23 @@ A Terminal User Interface (TUI) application for budget management.
 ---
 ## 📝 Overview
 
-Grapevine is a terminal-based tool designed to help users manage their budgets directly from their favorite terminal. It features a rich TUI built with Bubble Tea, and uses SQLite for data storage, Goose for database migrations, and SQLC for type-safe database queries.
+Grapevine is a terminal-based tool designed to help users manage their budgets directly from their favorite terminal. It features a rich TUI built with Bubble Tea and Lip Gloss, providing a modern terminal experience. It uses SQLite for local data storage, Goose for database migrations, and SQLC for type-safe database queries.
+
+### ✨ Key Features
+
+- **TUI Dashboard**: A clean and responsive terminal interface.
+- **User Authentication**: Simple login system (WIP).
+- **Transaction Management**: Track your income and expenses.
+- **Account Tracking**: Manage multiple financial accounts.
+- **Local First**: All data is stored locally in a SQLite database.
 
 ---
 ## 🛠️ Requirements
 
-- **[Go](https://go.dev/)**: v1.25 or higher
+- **[Go](https://go.dev/)**: v1.25
 - **[SQLite](https://www.sqlite.org/)**: Ensure you have SQLite installed for database storage.
 - **[Goose](https://github.com/pressly/goose)**: Used for database migrations.
 - **[SQLC](https://sqlc.dev/)**: Used to generate type-safe Go code from SQL.
-- **[Bubble Tea](https://github.com/charmbracelet/bubbletea)**: TUI framework.
 
 ---
 ## ⚙️ Setup
@@ -36,8 +43,10 @@ Grapevine is a terminal-based tool designed to help users manage their budgets d
    go mod download
    ```
 
-3. **Configure environment variables (Optional)**:
-   Refer to [docs/environment_variables.md](docs/environment_variables.md) for details on available environment variables.
+3. **Configure the application**:
+   The application automatically creates a configuration directory and file at `~/.config/grapevine/bgcliconfig.yaml` on first run.
+
+   Alternatively, you can refer to [docs/environment_variables.md](docs/environment_variables.md) for details on available environment variables.
 
 4. **Run migrations**:
    ```bash
@@ -48,7 +57,7 @@ Grapevine is a terminal-based tool designed to help users manage their budgets d
    goose up
    ```
 
-5. **Generate SQL code**:
+5. **Generate SQL code (Optional - for development)**:
    ```bash
    # Using sqlc (ensure sqlc is installed)
    sqlc generate
@@ -111,10 +120,9 @@ go test ./...
 │   └── environment_variables.md # Environment variables documentation
 ├── internal/             # Internal packages
 │   ├── auth/             # Authentication logic
-│   ├── cli/              # Command-line interface logic (WIP)
 │   ├── config/           # Configuration management
 │   ├── database/         # Generated SQLC code and database utilities
-│   └── tui/              # Terminal User Interface (bubbletea)
+│   └── tui/              # Terminal User Interface (bubbletea/lipgloss)
 ├── scripts/              # Helper scripts
 │   └── manage_test_data.sh
 ├── .env                  # Environment variables (git-ignored)
