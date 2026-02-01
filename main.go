@@ -12,11 +12,12 @@ import (
 
 const (
 	dbDriver = "sqlite3"
-	dbSource = "app.db"
+	dbSource = "database/app.db"
 )
 
 func main() {
-	m := tui.InitModel()
+	dbQueries := initDatabase()
+	m := tui.InitModel(dbQueries)
 	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
 		log.Fatalf("Failed to run TUI program: %v", err)
@@ -29,12 +30,6 @@ func initDatabase() *database.Queries {
 	if err != nil {
 		log.Fatalf("Failed to open SQL database: %v", err)
 	}
-	defer func(db *sql.DB) {
-		err := db.Close()
-		if err != nil {
-			log.Fatalf("Failed to close SQL database: %v", err)
-		}
-	}(db)
 	if err = db.Ping(); err != nil {
 		log.Fatalf("Failed to ping SQL database: %v", err)
 	}

@@ -1,7 +1,10 @@
 package tui
 
 import (
+	"context"
 	"fmt"
+	"grapevine/internal/database"
+	"log"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
@@ -17,12 +20,15 @@ var (
 )
 
 type Model struct {
+	dbQueries *database.Queries
+
 	focusIndex int
 	textInputs []textinput.Model
 }
 
-func InitModel() Model {
+func InitModel(dbQueries *database.Queries) Model {
 	m := Model{
+		dbQueries:  dbQueries,
 		focusIndex: 0,
 		textInputs: make([]textinput.Model, 2),
 	}
@@ -60,13 +66,24 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c":
 			return m, tea.Quit
-		case "tab", "shift+tab", "enter", "up", "down":
+		// Submit form or next focus
+		case "enter":
 			s := msg.String()
-
 			if s == "enter" && m.focusIndex == len(m.textInputs) {
-				// TODO: look up username and password in database
+				u, err := m.dbQueries.GetUserByUsername(context.Background(), m.textInputs[0].Value())
+				if err != nil {
+					log.Printf("error: %v", err)
+				} else {
+					log.Printf("user: %+v", u)
+				}
 				return m, tea.Quit
 			}
+			m.focusIndex++
+			cmds := m.updateFocus()
+			return m, tea.Batch(cmds...)
+		// Cycle focus
+		case "tab", "shift+tab", "up", "down":
+			s := msg.String()
 
 			if s == "tab" || s == "down" {
 				m.focusIndex++
@@ -80,20 +97,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.focusIndex = len(m.textInputs)
 			}
 
-			cmds := make([]tea.Cmd, len(m.textInputs))
-			for i := 0; i <= len(m.textInputs)-1; i++ {
-				if i == m.focusIndex {
-					// Set focused state
-					cmds[i] = m.textInputs[i].Focus()
-					m.textInputs[i].PromptStyle = focusedStyle
-					m.textInputs[i].TextStyle = focusedStyle
-					continue
-				}
-				// Remove focused state
-				m.textInputs[i].Blur()
-				m.textInputs[i].PromptStyle = noStyle
-				m.textInputs[i].TextStyle = noStyle
-			}
+			cmds := m.updateFocus()
 
 			return m, tea.Batch(cmds...)
 		}
@@ -104,16 +108,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	cmd := m.updateInputs(msg)
 
 	return m, cmd
-}
-
-func (m Model) updateInputs(msg tea.Msg) tea.Cmd {
-	cmds := make([]tea.Cmd, len(m.textInputs))
-
-	for i := range m.textInputs {
-		m.textInputs[i], cmds[i] = m.textInputs[i].Update(msg)
-	}
-
-	return tea.Batch(cmds...)
 }
 
 func (m Model) View() string {
@@ -135,4 +129,33 @@ func (m Model) View() string {
 	_, _ = fmt.Fprintf(&b, "\n\n%s\n\n", button)
 
 	return b.String()
+}
+
+func (m Model) updateInputs(msg tea.Msg) tea.Cmd {
+	cmds := make([]tea.Cmd, len(m.textInputs))
+
+	for i := range m.textInputs {
+		m.textInputs[i], cmds[i] = m.textInputs[i].Update(msg)
+	}
+
+	return tea.Batch(cmds...)
+}
+
+func (m Model) updateFocus() []tea.Cmd {
+	cmds := make([]tea.Cmd, len(m.textInputs))
+	for i := 0; i <= len(m.textInputs)-1; i++ {
+		if i == m.focusIndex {
+			// Set focused state
+			cmds[i] = m.textInputs[i].Focus()
+			m.textInputs[i].PromptStyle = focusedStyle
+			m.textInputs[i].TextStyle = focusedStyle
+			continue
+		}
+		// Remove focused state
+		m.textInputs[i].Blur()
+		m.textInputs[i].PromptStyle = noStyle
+		m.textInputs[i].TextStyle = noStyle
+	}
+
+	return cmds
 }
