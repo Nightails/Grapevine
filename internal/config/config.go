@@ -17,7 +17,7 @@ type Config struct {
 	UserName string `yaml:"user_name"`
 }
 
-const configFile = "bgcliconfig.yaml"
+const configFile = "gvconfig.yaml"
 const configDir = ".config/grapevine/"
 
 func Init() (*Config, error) {
