@@ -12,17 +12,14 @@ import (
 
 const (
 	dbDriver = "sqlite3"
-	dbSource = "database/app.db"
+	dbSource = "app.db"
 )
 
 func main() {
-	dbQueries := initDatabase()
-
-	// Initialize TUI
-	m := tui.NewLoginModel(dbQueries)
-	p := tea.NewProgram(m, tea.WithAltScreen())
+	m := tui.InitModel()
+	p := tea.NewProgram(m)
 	if _, err := p.Run(); err != nil {
-		log.Fatalf("Failed to run TUI: %v", err)
+		log.Fatalf("Failed to run TUI program: %v", err)
 	}
 }
 
