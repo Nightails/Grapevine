@@ -22,7 +22,7 @@ var (
 	noStyle      = lipgloss.NewStyle()
 )
 
-type Model struct {
+type loginModel struct {
 	dbQueries *database.Queries
 
 	// Overflow by 1 compare to the length of textInputs, to include login and register buttons
@@ -30,8 +30,8 @@ type Model struct {
 	textInputs []textinput.Model
 }
 
-func InitModel(dbQueries *database.Queries) Model {
-	m := Model{
+func newLoginModel(dbQueries *database.Queries) loginModel {
+	m := loginModel{
 		dbQueries:  dbQueries,
 		focusIndex: 0,
 		textInputs: make([]textinput.Model, 2),
@@ -60,11 +60,11 @@ func InitModel(dbQueries *database.Queries) Model {
 	return m
 }
 
-func (m Model) Init() tea.Cmd {
+func (m loginModel) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m loginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -135,7 +135,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m Model) View() string {
+func (m loginModel) View() string {
 	var b strings.Builder
 
 	b.WriteString("Welcome to Grapevine!\n\n")
@@ -161,7 +161,7 @@ func (m Model) View() string {
 	return b.String()
 }
 
-func (m Model) updateInputs(msg tea.Msg) tea.Cmd {
+func (m loginModel) updateInputs(msg tea.Msg) tea.Cmd {
 	cmds := make([]tea.Cmd, len(m.textInputs))
 
 	for i := range m.textInputs {
@@ -171,7 +171,7 @@ func (m Model) updateInputs(msg tea.Msg) tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
-func (m Model) updateFocus() []tea.Cmd {
+func (m loginModel) updateFocus() []tea.Cmd {
 	cmds := make([]tea.Cmd, len(m.textInputs))
 	for i := 0; i <= len(m.textInputs)-1; i++ {
 		if i == m.focusIndex {

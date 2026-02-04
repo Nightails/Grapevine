@@ -17,7 +17,7 @@ const (
 
 func main() {
 	dbQueries := initDatabase()
-	m := tui.InitModel(dbQueries)
+	m := tui.NewModel(dbQueries)
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		log.Fatalf("Failed to run TUI program: %v", err)
