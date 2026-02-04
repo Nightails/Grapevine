@@ -11,15 +11,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/google/uuid"
-)
-
-// Styles
-var (
-	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
-	blurredStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
-	noStyle      = lipgloss.NewStyle()
 )
 
 // LoginModel entrypoint to the application. Login or register a user.
@@ -30,6 +22,7 @@ type LoginModel struct {
 	// Overflow by 1 compare to the length of textInputs, to include login and register buttons
 	focusIndex int
 	textInputs []textinput.Model
+	errorMsg   string
 }
 
 func NewLoginModel(dbQueries *database.Queries) LoginModel {
@@ -38,6 +31,7 @@ func NewLoginModel(dbQueries *database.Queries) LoginModel {
 		overview:   NewOverviewModel(dbQueries),
 		focusIndex: 0,
 		textInputs: make([]textinput.Model, 2),
+		errorMsg:   "",
 	}
 
 	for i := range m.textInputs {
@@ -79,11 +73,18 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if m.focusIndex == len(m.textInputs) {
 				u, err := m.dbQueries.GetUserByUsername(context.Background(), m.textInputs[0].Value())
 				if err != nil {
-					log.Printf("error: %v", err)
-				} else {
-					log.Printf("user: %+v", u)
+					m.errorMsg = "User not found"
+					cmd := m.updateInputs(msg)
+					return m, cmd
 				}
-				// TODO: authenticate user and login
+				if !auth.CheckPassword(m.textInputs[1].Value(), u.Password) {
+					m.errorMsg = "Invalid password"
+					cmd := m.updateInputs(msg)
+					return m, cmd
+				}
+				log.Printf("login user: %s", u.Username)
+				// TODO: pass user to overview
+				return m, nil
 			}
 			// Register
 			if m.focusIndex == len(m.textInputs)+1 {
@@ -104,7 +105,9 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				} else {
 					log.Printf("user: %+v", u)
 				}
-				// TODO: login new user
+				log.Printf("register & login user: %s", u.Username)
+				// TODO: pass user to overview
+				return m, nil
 			}
 			m.focusIndex++
 			cmds := m.updateFocus()
@@ -142,6 +145,10 @@ func (m LoginModel) View() string {
 	var b strings.Builder
 
 	b.WriteString("Welcome to Grapevine!\n\n")
+
+	if m.errorMsg != "" {
+		_, _ = fmt.Fprintf(&b, "%s\n\n", errorStyle.Render(m.errorMsg))
+	}
 
 	for i := range m.textInputs {
 		b.WriteString(m.textInputs[i].View())
