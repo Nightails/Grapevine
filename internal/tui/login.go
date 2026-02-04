@@ -25,6 +25,7 @@ var (
 // LoginModel entrypoint to the application. Login or register a user.
 type LoginModel struct {
 	dbQueries *database.Queries
+	overview  OverviewModel
 
 	// Overflow by 1 compare to the length of textInputs, to include login and register buttons
 	focusIndex int
@@ -34,6 +35,7 @@ type LoginModel struct {
 func NewLoginModel(dbQueries *database.Queries) LoginModel {
 	m := LoginModel{
 		dbQueries:  dbQueries,
+		overview:   NewOverviewModel(dbQueries),
 		focusIndex: 0,
 		textInputs: make([]textinput.Model, 2),
 	}
