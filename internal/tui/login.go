@@ -3,11 +3,13 @@ package tui
 import (
 	"context"
 	"fmt"
-	"grapevine/internal/auth"
-	"grapevine/internal/database"
 	"log"
 	"strings"
 	"time"
+
+	"grapevine/internal/auth"
+	"grapevine/internal/config"
+	"grapevine/internal/database"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
@@ -28,7 +30,7 @@ type LoginModel struct {
 func NewLoginModel(dbQueries *database.Queries) LoginModel {
 	m := LoginModel{
 		dbQueries:  dbQueries,
-		overview:   NewOverviewModel(dbQueries),
+		overview:   NewOverviewModel(&config.Config{}, dbQueries),
 		focusIndex: 0,
 		textInputs: make([]textinput.Model, 2),
 		errorMsg:   "",
@@ -82,9 +84,8 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					cmd := m.updateInputs(msg)
 					return m, cmd
 				}
-				log.Printf("login user: %s", u.Username)
-				// TODO: pass user to overview
-				return m, nil
+				m.overview.cfg.User = u
+				return m.overview, nil
 			}
 			// Register
 			if m.focusIndex == len(m.textInputs)+1 {
@@ -105,9 +106,8 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				} else {
 					log.Printf("user: %+v", u)
 				}
-				log.Printf("register & login user: %s", u.Username)
-				// TODO: pass user to overview
-				return m, nil
+				m.overview.cfg.User = u
+				return m.overview, nil
 			}
 			m.focusIndex++
 			cmds := m.updateFocus()
