@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"grapevine/internal/config"
 	"grapevine/internal/database"
+	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -42,6 +43,9 @@ func (m OverviewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m OverviewModel) View() string {
-	view := fmt.Sprintf("Overview\nWelcome %s!\n\n", m.cfg.User.Username)
-	return view
+	var b strings.Builder
+	b.WriteString(fmt.Sprintf("Overview\nWelcome %s!\n\n", m.cfg.User.Username))
+	b.WriteString(fmt.Sprintf("Transactions\n"))
+	b.WriteString(fmt.Sprintf("Account Balances\n"))
+	return b.String()
 }
