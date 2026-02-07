@@ -28,9 +28,10 @@ type LoginModel struct {
 }
 
 func NewLoginModel(dbQueries *database.Queries) LoginModel {
+	cfg := config.Config{}
 	m := LoginModel{
 		dbQueries:  dbQueries,
-		overview:   NewOverviewModel(&config.Config{}, dbQueries),
+		overview:   NewOverviewModel(&cfg, dbQueries),
 		focusIndex: 0,
 		textInputs: make([]textinput.Model, 2),
 		errorMsg:   "",

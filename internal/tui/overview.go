@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"fmt"
 	"grapevine/internal/config"
 	"grapevine/internal/database"
 
@@ -35,5 +36,6 @@ func (m OverviewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m OverviewModel) View() string {
-	return "Overview"
+	view := fmt.Sprintf("Overview\nWelcome %s!\n\n", m.cfg.User.Username)
+	return view
 }
