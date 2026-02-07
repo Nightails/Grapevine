@@ -11,12 +11,16 @@ import (
 type OverviewModel struct {
 	dbQueries *database.Queries
 	cfg       *config.Config
+
+	transaction TransactionModel
 }
 
 func NewOverviewModel(cfg *config.Config, dbQueries *database.Queries) OverviewModel {
 	return OverviewModel{
 		cfg:       cfg,
 		dbQueries: dbQueries,
+
+		transaction: NewTransactionModel(cfg, dbQueries),
 	}
 }
 
@@ -30,6 +34,8 @@ func (m OverviewModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c":
 			return m, tea.Quit
+		case "a":
+			return m.transaction, nil
 		}
 	}
 	return m, nil
